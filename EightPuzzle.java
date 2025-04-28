@@ -222,7 +222,7 @@ public class EightPuzzle implements ActionListener {
 
             case "Rules":
                 JOptionPane.showMessageDialog(null,
-                        "Starting at the top left corner, move the tiles in ascending order in the grid. \nThe tile in the lower right corner should remain \"empty\". \nTo move a tile you can click on it");
+                        "Starting at the top left corner, move the tiles in ascending order in the grid. \nThe tile in the lower right corner should remain \"empty\". \nTo move a tile you can click on it.");
                 break;
 
             case "About":
