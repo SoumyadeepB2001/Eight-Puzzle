@@ -31,6 +31,7 @@ public class EightPuzzle implements ActionListener {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         initComponents();
+        startGame();
         frame.setVisible(true);
     }
 
@@ -69,7 +70,6 @@ public class EightPuzzle implements ActionListener {
 
         buttonPanel = new JPanel(new GridLayout(3, 3)); // 3 rows and 3 columns for 9 buttons
         frame.add(buttonPanel, BorderLayout.CENTER);
-        startGame();
     }
 
     public static ArrayList<Integer> createSolvablePuzzle() {
