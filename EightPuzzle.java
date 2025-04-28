@@ -91,6 +91,7 @@ public class EightPuzzle implements ActionListener {
             }
             tiles[i].setFont(new Font("Serif", Font.BOLD, 44));
             tiles[i].setBackground(Color.WHITE);
+            tiles[i].setForeground(Color.BLACK);
             tiles[i].setBorder(new LineBorder(Color.BLACK, 1));
 
             buttonPanel.add(tiles[i]); // Add buttons to the panel
@@ -169,19 +170,18 @@ public class EightPuzzle implements ActionListener {
 
     public void autoSolve() {
         labNoOfMoves.setText("Solving...");
-        removeActionListeners();
-    }
 
-    public void removeActionListeners() {
-
-        for (int i = 0; i < tiles.length; i++) {
-            for (ActionListener listener : tiles[i].getActionListeners())
-                tiles[i].removeActionListener(listener);
+        ArrayList<Integer> finalState = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            if (tiles[i].isVisible()) {
+                finalState.add(Integer.parseInt(tiles[i].getText()));
+            } else {
+                finalState.add(0);
+            }
         }
 
-        for (ActionListener listener : autoSolve.getActionListeners())
-            autoSolve.removeActionListener(listener);
-
+        new AutoSolve(finalState);
+        frame.dispose();
     }
 
     public void actionPerformed(ActionEvent evt) {
