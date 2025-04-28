@@ -43,8 +43,12 @@ public class Main implements ActionListener {
         btnSetupBoard.setBounds(75, 250, 350, 60); // x, y, width, height
 
         // Button background color
-        btnRandomPuzzle.setBackground(Color.white);
-        btnSetupBoard.setBackground(Color.white);
+        btnRandomPuzzle.setBackground(new Color(33, 3, 4));
+        btnSetupBoard.setBackground(new Color(33, 3, 4));
+
+        // Button foreground color
+        btnRandomPuzzle.setForeground(Color.WHITE);
+        btnSetupBoard.setForeground(Color.WHITE);
 
         // Add action listeners
         btnRandomPuzzle.addActionListener(this);
