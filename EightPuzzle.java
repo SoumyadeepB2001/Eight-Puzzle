@@ -8,13 +8,11 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.awt.*;
 import java.util.*;
-
 import javax.swing.border.LineBorder;
 
-public class SlidingPuzzle implements ActionListener {
+public class EightPuzzle implements ActionListener {
     JFrame frame;
     JMenuBar menuBar;
     JMenu options, help;
@@ -27,10 +25,10 @@ public class SlidingPuzzle implements ActionListener {
     JButton tiles[] = new JButton[9];
 
     public static void main(String[] args) {
-        new SlidingPuzzle();
+        new EightPuzzle();
     }
 
-    SlidingPuzzle() {
+    EightPuzzle() {
         frame = new JFrame("Sliding Puzzle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
@@ -78,12 +76,45 @@ public class SlidingPuzzle implements ActionListener {
         startGame();
     }
 
-    public void startGame() {
+    public static ArrayList<Integer> createSolvablePuzzle() {
         ArrayList<Integer> numbers = new ArrayList<>();
         for (int i = 1; i <= 9; i++) {
             numbers.add(i);
         }
         Collections.shuffle(numbers);
+
+        // Check the number of inversions
+        int inversions = 0;
+        for (int i = 0; i < numbers.size(); i++) {
+            for (int j = i + 1; j < numbers.size(); j++) {
+                int numI = numbers.get(i);
+                int numJ = numbers.get(j);
+                if (numI != 9 && numJ != 9 && numI > numJ) {
+                    inversions++;
+                }
+            }
+        }
+
+        // If inversions are odd, swap the first two non-blank tiles
+        if (inversions % 2 == 1) {
+            for (int i = 0; i < numbers.size(); i++) {
+                for (int j = i + 1; j < numbers.size(); j++) {
+                    if (numbers.get(i) != 9 && numbers.get(j) != 9) {
+                        // Swap
+                        Collections.swap(numbers, i, j);
+                        // After one swap, break both loops
+                        i = numbers.size();
+                        break;
+                    }
+                }
+            }
+        }
+
+        return numbers;
+    }
+
+    public void startGame() {
+        ArrayList<Integer> numbers = createSolvablePuzzle();
 
         for (int i = 0; i < 9; i++) {
             tiles[i] = new JButton(); // Create an empty button
@@ -179,7 +210,7 @@ public class SlidingPuzzle implements ActionListener {
         switch (evt.getActionCommand()) {
             case "New Game":
                 frame.dispose();
-                new SlidingPuzzle();
+                new EightPuzzle();
                 break;
 
             case "Exit":
