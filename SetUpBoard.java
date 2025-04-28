@@ -2,17 +2,21 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SetUpBoard {
+public class SetUpBoard implements ActionListener {
 
     private JFrame frame;
     private JPanel buttonPanel;
     private Set<Integer> usedNumbers;
     private ArrayList<JButton> buttons;
     private ImageIcon woodBack;
+    private JMenuBar menuBar;
+    private JMenu options, help;
+    private JMenuItem newGame, exit, contact, rules, about;
 
     public SetUpBoard() {
         usedNumbers = new HashSet<>();
@@ -28,16 +32,19 @@ public class SetUpBoard {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
+        initMenuBar(); // Setup menu bar
+
         buttonPanel = new JPanel(new GridLayout(3, 3));
 
         for (int i = 0; i < 9; i++) {
             JButton button = new JButton();
-            button.setFont(new Font("Arial", Font.BOLD, 44)); // Larger font size
-            button.setIcon(woodBack); // Set background image
+            button.setFont(new Font("Arial", Font.BOLD, 44));
+            button.setForeground(Color.BLACK);
+            button.setIcon(woodBack);
             button.setHorizontalTextPosition(JButton.CENTER);
             button.setVerticalTextPosition(JButton.CENTER);
             button.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-            button.setContentAreaFilled(false); // Important to see background image
+            button.setContentAreaFilled(false);
             button.setOpaque(false);
 
             button.addActionListener(new ActionListener() {
@@ -68,6 +75,34 @@ public class SetUpBoard {
         frame.setVisible(true);
     }
 
+    private void initMenuBar() {
+        menuBar = new JMenuBar();
+        options = new JMenu("Options");
+        help = new JMenu("Help");
+        newGame = new JMenuItem("New Game");
+        exit = new JMenuItem("Exit");
+        contact = new JMenuItem("Contact");
+        rules = new JMenuItem("Rules");
+        about = new JMenuItem("About");
+
+        newGame.addActionListener(this);
+        exit.addActionListener(this);
+        contact.addActionListener(this);
+        rules.addActionListener(this);
+        about.addActionListener(this);
+
+        options.add(newGame);
+        options.add(exit);
+        help.add(contact);
+        help.add(rules);
+        help.add(about);
+
+        menuBar.add(options);
+        menuBar.add(help);
+
+        frame.setJMenuBar(menuBar);
+    }
+
     private void handleButtonClick(JButton button) {
         String input = JOptionPane.showInputDialog(frame, "Enter a number between 1 and 8 (leave one space blank):");
         if (input == null) {
@@ -75,7 +110,6 @@ public class SetUpBoard {
         }
         input = input.trim();
         if (input.isEmpty()) {
-            // Blank the button
             String oldText = button.getText();
             if (!oldText.isEmpty()) {
                 try {
@@ -98,7 +132,6 @@ public class SetUpBoard {
                 return;
             }
 
-            // Remove old number if needed
             String oldText = button.getText();
             if (!oldText.isEmpty()) {
                 try {
@@ -135,7 +168,6 @@ public class SetUpBoard {
                 }
             }
         }
-
         return inversions;
     }
 
@@ -157,16 +189,42 @@ public class SetUpBoard {
             }
         }
 
-        if(countInversions(numbers) % 2 == 1)
-        {
+        if (countInversions(numbers) % 2 == 1) {
             JOptionPane.showMessageDialog(frame,
                     "This setup is unsolvable.", "Unsolvable Setup",
                     JOptionPane.WARNING_MESSAGE);
-
             return;
         }
 
         frame.dispose();
         new EightPuzzle(numbers);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "New Game":
+                frame.dispose();
+                new Main(); // Assuming you have a Main class that shows the main menu
+                break;
+            case "Exit":
+                System.exit(0);
+                break;
+            case "Contact":
+                try {
+                    Desktop.getDesktop().browse(new URL("https://twitter.com/SoumyadeepB2001").toURI());
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(null, "Browser not found");
+                }
+                break;
+            case "Rules":
+                JOptionPane.showMessageDialog(null,
+                        "Starting at the top left corner, move the tiles in ascending order in the grid. \nThe tile in the lower right corner should remain \"empty\". \nTo move a tile you can click on it.");
+                break;
+            case "About":
+                JOptionPane.showMessageDialog(null,
+                        "Match The Tiles Game\nVersion: 1.0.1\nProgram written by Soumyadeep Banerjee, MCA");
+                break;
+        }
     }
 }
