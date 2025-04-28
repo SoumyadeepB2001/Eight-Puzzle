@@ -19,19 +19,16 @@ public class EightPuzzle implements ActionListener {
     int indexOfCurrentEmptyTile = -1; // stores the index of the currently empty tile
     int noOfMoves = 0;
     JButton tiles[] = new JButton[9];
+    JButton autoSolve;
 
-    public static void main(String[] args) {
-        new EightPuzzle();
-    }
-
-    EightPuzzle() {
+    EightPuzzle(ArrayList<Integer> numbers) {
         frame = new JFrame("Eight Puzzle");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         initComponents();
-        startGame();
+        startGame(numbers);
         frame.setVisible(true);
     }
 
@@ -70,47 +67,15 @@ public class EightPuzzle implements ActionListener {
 
         buttonPanel = new JPanel(new GridLayout(3, 3)); // 3 rows and 3 columns for 9 buttons
         frame.add(buttonPanel, BorderLayout.CENTER);
+
+        autoSolve = new JButton("Auto solve using AI");
+        autoSolve.setBackground(new Color(33, 3, 4));
+        autoSolve.setForeground(Color.white);
+        autoSolve.addActionListener(this);
+        frame.add(autoSolve, BorderLayout.SOUTH);
     }
 
-    public static ArrayList<Integer> createSolvablePuzzle() {
-        ArrayList<Integer> numbers = new ArrayList<>();
-        for (int i = 0; i <= 8; i++) { // From 0 to 8 instead of 1 to 9
-            numbers.add(i);
-        }
-        Collections.shuffle(numbers);
-
-        // Check the number of inversions
-        int inversions = 0;
-        for (int i = 0; i < numbers.size(); i++) {
-            for (int j = i + 1; j < numbers.size(); j++) {
-                int numI = numbers.get(i);
-                int numJ = numbers.get(j);
-                if (numI != 0 && numJ != 0 && numI > numJ) {
-                    inversions++;
-                }
-            }
-        }
-
-        // If inversions are odd, swap the first two non-blank tiles
-        if (inversions % 2 == 1) {
-            for (int i = 0; i < numbers.size(); i++) {
-                for (int j = i + 1; j < numbers.size(); j++) {
-                    if (numbers.get(i) != 0 && numbers.get(j) != 0) {
-                        // Swap
-                        Collections.swap(numbers, i, j);
-                        // After one swap, break both loops
-                        i = numbers.size();
-                        break;
-                    }
-                }
-            }
-        }
-
-        return numbers;
-    }
-
-    public void startGame() {
-        ArrayList<Integer> numbers = createSolvablePuzzle();
+    public void startGame(ArrayList<Integer> numbers) {
 
         for (int i = 0; i < 9; i++) {
             tiles[i] = new JButton(); // Create an empty button
@@ -200,12 +165,21 @@ public class EightPuzzle implements ActionListener {
             e.printStackTrace();
         }
     }
+    
+    public void autoSolve()
+    {
+        labNoOfMoves.setText("Solving...");
+    }
 
     public void actionPerformed(ActionEvent evt) {
         switch (evt.getActionCommand()) {
+            case "Auto solve using AI":
+                autoSolve();
+                break;
+
             case "New Game":
                 frame.dispose();
-                new EightPuzzle();
+                new Main();
                 break;
 
             case "Exit":
