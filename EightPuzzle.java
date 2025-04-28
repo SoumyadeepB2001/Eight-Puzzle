@@ -107,7 +107,8 @@ public class EightPuzzle implements ActionListener {
                         public void actionPerformed(ActionEvent e) {
                             // The following logic is basically this:
                             // It finds if the clicked tile can be swapped with the empty tile
-                            // to do this we first have to find if the clicked tile is adjacent to the empty tile
+                            // to do this we first have to find if the clicked tile is adjacent to the empty
+                            // tile
                             // when the empty tile is in the middle that is i=4 then there will be 4
                             // non-empty tiles adjacent to it
                             // the 4 tiles will be (i-1), (i-3), (i+1), (i+3)
@@ -165,10 +166,22 @@ public class EightPuzzle implements ActionListener {
             e.printStackTrace();
         }
     }
-    
-    public void autoSolve()
-    {
+
+    public void autoSolve() {
         labNoOfMoves.setText("Solving...");
+        removeActionListeners();
+    }
+
+    public void removeActionListeners() {
+
+        for (int i = 0; i < tiles.length; i++) {
+            for (ActionListener listener : tiles[i].getActionListeners())
+                tiles[i].removeActionListener(listener);
+        }
+
+        for (ActionListener listener : autoSolve.getActionListeners())
+            autoSolve.removeActionListener(listener);
+
     }
 
     public void actionPerformed(ActionEvent evt) {
