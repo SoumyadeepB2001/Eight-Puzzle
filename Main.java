@@ -61,7 +61,7 @@ public class Main implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnRandomPuzzle) {
             frame.dispose();
-            CreatePuzzle.createSolvablePuzzle(); // Start the normal random puzzle
+            GeneratePuzzle.generateSolvablePuzzle(); // Start the normal random puzzle
         } else if (e.getSource() == btnSetupBoard) {
             JOptionPane.showMessageDialog(frame, "Set up board feature coming soon!");
             // You can later link this to a custom setup class
