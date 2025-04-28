@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class GeneratePuzzle {
+
+    GeneratePuzzle() {
+        generateSolvablePuzzle();
+    }
+
     public static void generateSolvablePuzzle() {
         ArrayList<Integer> numbers = new ArrayList<>();
         for (int i = 0; i <= 8; i++) { // From 0 to 8 instead of 1 to 9

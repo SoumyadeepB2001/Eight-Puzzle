@@ -13,7 +13,7 @@ public class Main implements ActionListener {
 
     Main() {
         // Create and set up the frame
-        frame = new JFrame("Sliding Puzzle - Main Menu");
+        frame = new JFrame("Eight Puzzle - Main Menu");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(500, 500);
         frame.setResizable(false);
@@ -42,7 +42,7 @@ public class Main implements ActionListener {
         btnRandomPuzzle.setBounds(75, 150, 350, 60); // x, y, width, height
         btnSetupBoard.setBounds(75, 250, 350, 60); // x, y, width, height
 
-        //Button background color
+        // Button background color
         btnRandomPuzzle.setBackground(Color.white);
         btnSetupBoard.setBackground(Color.white);
 
@@ -61,10 +61,10 @@ public class Main implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == btnRandomPuzzle) {
             frame.dispose();
-            GeneratePuzzle.generateSolvablePuzzle(); // Start the normal random puzzle
+            new GeneratePuzzle(); // Start the normal random puzzle
         } else if (e.getSource() == btnSetupBoard) {
-            JOptionPane.showMessageDialog(frame, "Set up board feature coming soon!");
-            // You can later link this to a custom setup class
+            frame.dispose();
+            new SetUpBoard();
         }
     }
 }
