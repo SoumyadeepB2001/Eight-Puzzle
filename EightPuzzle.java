@@ -106,41 +106,29 @@ public class EightPuzzle implements ActionListener {
             tiles[i].addActionListener(
                     new ActionListener() {
                         public void actionPerformed(ActionEvent e) {
-                            // The following logic is basically this:
-                            // It finds if the clicked tile can be swapped with the empty tile
-                            // to do this we first have to find if the clicked tile is adjacent to the empty
-                            // tile
-                            // when the empty tile is in the middle that is i=4 then there will be 4
-                            // non-empty tiles adjacent to it
-                            // the 4 tiles will be (i-1), (i-3), (i+1), (i+3)
-                            // if the values of (i-1), (i-3), (i+1), (i+3) are within the range of 0 to 8
-                            // then they are valid else they are discarded
-                            // (i+1) and (i-1) have 2 extra edge cases other than being in range of 0 to 8
-                            // (i-1) will be invalid if i==3 or i==6
-                            // (i+1) will not work if i+1==3 or i+1==6
-                            // Now lets find all the buttons the empty button is adjacent to
-                            // If the empty button is adjacent to the current clicked button then we swap
-                            // the 2 buttons
 
-                            if (indexOfClickedButton == indexOfCurrentEmptyTile - 3
-                                    || indexOfClickedButton == indexOfCurrentEmptyTile + 3)
+                            if (isAdjacent(indexOfClickedButton, indexOfCurrentEmptyTile)) {
                                 swapButtons(tiles[indexOfClickedButton], tiles[indexOfCurrentEmptyTile],
                                         indexOfClickedButton);
+                                playSound("assets/wood.wav");
+                            }
 
-                            else if (indexOfClickedButton == indexOfCurrentEmptyTile - 1
-                                    && (indexOfCurrentEmptyTile % 3 != 0))
-                                swapButtons(tiles[indexOfClickedButton], tiles[indexOfCurrentEmptyTile],
-                                        indexOfClickedButton);
-
-                            else if (indexOfClickedButton == indexOfCurrentEmptyTile + 1
-                                    && (indexOfCurrentEmptyTile % 3 != 2))
-                                swapButtons(tiles[indexOfClickedButton], tiles[indexOfCurrentEmptyTile],
-                                        indexOfClickedButton);
-
-                            playSound("assets/wood.wav");
                         }
                     });
         }
+    }
+
+    private boolean isAdjacent(int index1, int index2) {
+        // If two tiles are adjacent then their Manhattan dist = 1
+        int row1 = index1 / 3;
+        int col1 = index1 % 3;
+        int row2 = index2 / 3;
+        int col2 = index2 % 3;
+
+        int rowDiff = Math.abs(row1 - row2);
+        int colDiff = Math.abs(col1 - col2);
+
+        return (rowDiff + colDiff == 1);
     }
 
     public void swapButtons(JButton clickedButton, JButton emptyTile, int indexOfNextEmptyTile) {
