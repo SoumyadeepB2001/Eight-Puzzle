@@ -1,9 +1,20 @@
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
+import javax.sound.sampled.UnsupportedAudioFileException;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.PriorityQueue;
 
 public class AutoSolve implements ActionListener {
     JFrame frame;
@@ -14,6 +25,7 @@ public class AutoSolve implements ActionListener {
     JPanel labelPanel;
     ImageIcon woodBack = new ImageIcon("assets/woodBack.png");
     JLabel tiles[] = new JLabel[9];
+    ArrayList<Integer> inputBoard;
 
     public AutoSolve(ArrayList<Integer> numbers) {
         frame = new JFrame("Eight Puzzle - Solved View");
@@ -22,8 +34,10 @@ public class AutoSolve implements ActionListener {
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
         initComponents();
-        showFinalState(numbers);
+        inputBoard = numbers;
+        showCurrentState(inputBoard);
         frame.setVisible(true);
+        showSolving(solvePuzzle());
     }
 
     private void initComponents() {
@@ -63,7 +77,52 @@ public class AutoSolve implements ActionListener {
         frame.add(labelPanel, BorderLayout.CENTER);
     }
 
-    private void showFinalState(ArrayList<Integer> numbers) {
+    private ArrayList<ArrayList<Integer>> solvePuzzle() {
+        int[] startBoard = new int[9];
+        for (int i = 0; i < 9; i++) {
+            startBoard[i] = inputBoard.get(i);
+        }
+
+        BoardState start = new BoardState(startBoard, null, 0);
+
+        PriorityQueue<BoardState> openList = new PriorityQueue<>(); // to get the smallest value
+        HashSet<String> closedSet = new HashSet<>();
+
+        openList.add(start);
+
+        while (!openList.isEmpty()) {
+            BoardState current = openList.poll();
+
+            if (current.isGoal()) {
+                // Found goal, reconstruct path
+                ArrayList<ArrayList<Integer>> path = new ArrayList<>();
+                while (current != null) {
+                    ArrayList<Integer> state = new ArrayList<>();
+                    for (int i = 0; i < 9; i++) {
+                        state.add(current.board[i]);
+                    }
+                    path.add(state);
+                    current = current.parent;
+                }
+                Collections.reverse(path); // To get path from start to goal
+                return path;
+            }
+
+            closedSet.add(Arrays.toString(current.board));
+            ArrayList<BoardState> neighbors = current.generateNeighbors();
+
+            for (int i = 0; i < neighbors.size(); i++) {
+                BoardState neighbor = neighbors.get(i);
+                String hash = Arrays.toString(neighbor.board);
+                if (!closedSet.contains(hash)) {
+                    openList.add(neighbor);
+                }
+            }
+        }
+        return new ArrayList<>();
+    }
+
+    private void showCurrentState(ArrayList<Integer> numbers) {
         for (int i = 0; i < 9; i++) {
             tiles[i] = new JLabel();
             tiles[i].setOpaque(true);
@@ -86,12 +145,60 @@ public class AutoSolve implements ActionListener {
         }
     }
 
+    private void showSolving(ArrayList<ArrayList<Integer>> states) {
+        final int[] index = { 0 };
+
+        Timer timer = new Timer(800, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (index[0] >= states.size()) {
+                    ((Timer) e.getSource()).stop();
+                    labNoOfMoves.setText("Solved in " + (states.size() - 1) + " moves");
+                    return;
+                }
+
+                // Clear previous tiles and update with new state
+                SwingUtilities.invokeLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        labelPanel.removeAll(); // Clear the panel
+                        showCurrentState(states.get(index[0])); // Add new state
+                        playSound("assets/wood.wav");
+                        labelPanel.revalidate(); // Revalidate the layout
+                        labelPanel.repaint(); // Force repaint of the panel
+                    }
+                });
+
+                index[0]++; // Move to the next state
+            }
+        });
+
+        timer.setInitialDelay(800);
+        timer.start();
+    }
+
+    public void playSound(String soundFileName) {
+        try {
+            // Load the sound file
+            File soundFile = new File(soundFileName);
+            AudioInputStream audioStream = AudioSystem.getAudioInputStream(soundFile);
+
+            // Get a clip resource
+            Clip clip = AudioSystem.getClip();
+
+            // Open the audio stream and start playing it
+            clip.open(audioStream);
+            clip.start();
+        } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
+            e.printStackTrace();
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "New Game":
                 frame.dispose();
-                new Main(); // Assuming you have a Main class like in your EightPuzzle
+                new Main(); 
                 break;
             case "Exit":
                 System.exit(0);
