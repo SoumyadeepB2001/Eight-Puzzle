@@ -9,14 +9,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.PriorityQueue;
 
-public class AutoSolve implements ActionListener {
+public class AutoSolve {
     JFrame frame;
     JMenuBar menuBar;
     JMenu options, help;
@@ -42,31 +41,8 @@ public class AutoSolve implements ActionListener {
 
     private void initComponents() {
         // Set up the menu bar and menu items
-        menuBar = new JMenuBar();
-        options = new JMenu("Options");
-        help = new JMenu("Help");
-        newGame = new JMenuItem("New Game");
-        exit = new JMenuItem("Exit");
-        contact = new JMenuItem("Contact");
-        rules = new JMenuItem("Rules");
-        about = new JMenuItem("About");
-
-        newGame.addActionListener(this);
-        exit.addActionListener(this);
-        contact.addActionListener(this);
-        rules.addActionListener(this);
-        about.addActionListener(this);
-
-        options.add(newGame);
-        options.add(exit);
-        help.add(contact);
-        help.add(rules);
-        help.add(about);
-
-        menuBar.add(options);
-        menuBar.add(help);
-
-        frame.setJMenuBar(menuBar);
+        MenuBarController menuHelper = new MenuBarController(frame);
+        frame.setJMenuBar(menuHelper.createMenuBar());
 
         labNoOfMoves = new JLabel("Solving...");
         labNoOfMoves.setFont(new Font("Arial", Font.BOLD, 24));
@@ -190,34 +166,6 @@ public class AutoSolve implements ActionListener {
             clip.start();
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        switch (e.getActionCommand()) {
-            case "New Game":
-                frame.dispose();
-                new Main(); 
-                break;
-            case "Exit":
-                System.exit(0);
-                break;
-            case "Contact":
-                try {
-                    Desktop.getDesktop().browse(new URL("https://twitter.com/SoumyadeepB2001").toURI());
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(null, "Browser not found");
-                }
-                break;
-            case "Rules":
-                JOptionPane.showMessageDialog(null,
-                        "Starting at the top left corner, move the tiles in ascending order in the grid. \nThe tile in the lower right corner should remain \"empty\". \nTo move a tile you can click on it.");
-                break;
-            case "About":
-                JOptionPane.showMessageDialog(null,
-                        "Match The Tiles Game\nVersion: 1.0.1\nProgram written by Soumyadeep Banerjee, MCA");
-                break;
         }
     }
 }

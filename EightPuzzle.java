@@ -1,4 +1,3 @@
-import java.net.URL;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.event.*;
@@ -10,9 +9,6 @@ import javax.swing.border.LineBorder;
 
 public class EightPuzzle implements ActionListener {
     JFrame frame;
-    JMenuBar menuBar;
-    JMenu options, help;
-    JMenuItem newGame, exit, contact, rules, about;
     JLabel labNoOfMoves;
     JPanel buttonPanel;
     ImageIcon woodBack = new ImageIcon("assets/woodBack.png");
@@ -34,32 +30,9 @@ public class EightPuzzle implements ActionListener {
 
     private void initComponents() {
         // Set up the menu bar and menu items
-        menuBar = new JMenuBar();
-        options = new JMenu("Options");
-        help = new JMenu("Help");
-        newGame = new JMenuItem("New Game");
-        exit = new JMenuItem("Exit");
-        contact = new JMenuItem("Contact");
-        rules = new JMenuItem("Rules");
-        about = new JMenuItem("About");
-
-        newGame.addActionListener(this);
-        exit.addActionListener(this);
-        contact.addActionListener(this);
-        rules.addActionListener(this);
-        about.addActionListener(this);
-
-        options.add(newGame);
-        options.add(exit);
-        help.add(contact);
-        help.add(rules);
-        help.add(about);
-
-        menuBar.add(options);
-        menuBar.add(help);
-
-        frame.setJMenuBar(menuBar);
-
+        MenuBarController menuHelper = new MenuBarController(frame);
+        frame.setJMenuBar(menuHelper.createMenuBar());
+        
         labNoOfMoves = new JLabel("Moves: " + noOfMoves);
         labNoOfMoves.setFont(new Font("Arial", Font.BOLD, 24));
         labNoOfMoves.setHorizontalAlignment(SwingConstants.CENTER);
@@ -176,33 +149,6 @@ public class EightPuzzle implements ActionListener {
         switch (evt.getActionCommand()) {
             case "Auto solve using AI":
                 autoSolve();
-                break;
-
-            case "New Game":
-                frame.dispose();
-                new Main();
-                break;
-
-            case "Exit":
-                System.exit(0);
-                break;
-
-            case "Contact":
-                try {
-                    Desktop.getDesktop().browse(new URL("https://twitter.com/SoumyadeepB2001").toURI());
-                } catch (Exception e) {
-                    JOptionPane.showMessageDialog(null, "Browser not found");
-                }
-                break;
-
-            case "Rules":
-                JOptionPane.showMessageDialog(null,
-                        "Starting at the top left corner, move the tiles in ascending order in the grid. \nThe tile in the lower right corner should remain \"empty\". \nTo move a tile you can click on it.");
-                break;
-
-            case "About":
-                JOptionPane.showMessageDialog(null,
-                        "Match The Tiles Game\nVersion: 1.0.1\nProgram written by Soumyadeep Banerjee, MCA");
                 break;
         }
     }
