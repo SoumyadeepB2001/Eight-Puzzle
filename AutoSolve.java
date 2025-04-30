@@ -17,9 +17,6 @@ import java.util.PriorityQueue;
 
 public class AutoSolve {
     JFrame frame;
-    JMenuBar menuBar;
-    JMenu options, help;
-    JMenuItem newGame, exit, contact, rules, about;
     JLabel labNoOfMoves;
     JPanel labelPanel;
     ImageIcon woodBack = new ImageIcon("assets/woodBack.png");
