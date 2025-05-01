@@ -39,7 +39,7 @@ public class AutoSolve {
 
     private void initComponents() {
         // Set up the menu bar and menu items
-        MenuBarController menuHelper = new MenuBarController(frame);
+        MenuBarController menuHelper = new MenuBarController(this);
         frame.setJMenuBar(menuHelper.createMenuBar());
 
         labNoOfMoves = new JLabel("Solving...");
