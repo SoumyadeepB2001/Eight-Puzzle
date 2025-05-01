@@ -120,35 +120,33 @@ public class AutoSolve {
     }
 
     private void showSolving(ArrayList<ArrayList<Integer>> states) {
-        final int[] index = { 0 };
-
+        final int[] index = {0};
+    
         timer = new Timer(800, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (index[0] >= states.size()) {
-                    ((Timer) e.getSource()).stop();
+                    timer.stop(); // Stop the timer directly
                     labNoOfMoves.setText("Solved in " + (states.size() - 1) + " moves");
                     return;
                 }
-
-                // Clear previous tiles and update with new state
-                SwingUtilities.invokeLater(new Runnable() {
-                    @Override
-                    public void run() {
-                        labelPanel.removeAll(); // Clear the panel
-                        showCurrentState(states.get(index[0])); // Add new state
-                        playSound("assets/wood.wav");
-                        labelPanel.revalidate(); // Revalidate the layout
-                        labelPanel.repaint(); // Force repaint of the panel
-                    }
+    
+                ArrayList<Integer> currentState = states.get(index[0]); // Get state before incrementing
+    
+                SwingUtilities.invokeLater(() -> {
+                    labelPanel.removeAll();
+                    showCurrentState(currentState);
+                    playSound("assets/wood.wav");
+                    labelPanel.revalidate();
+                    labelPanel.repaint();
                 });
-
-                index[0]++; // Move to the next state
+    
+                index[0]++; // Increment AFTER UI update
             }
         });
-
+    
         timer.setInitialDelay(800);
         timer.start();
-    }
+    }    
 
     public void stopSolving() {
         if (timer != null) {
