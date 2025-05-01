@@ -22,6 +22,7 @@ public class AutoSolve {
     ImageIcon woodBack = new ImageIcon("assets/woodBack.png");
     JLabel tiles[] = new JLabel[9];
     ArrayList<Integer> inputBoard;
+    Timer timer;
 
     public AutoSolve(ArrayList<Integer> numbers) {
         frame = new JFrame("Eight Puzzle - Solved View");
@@ -121,7 +122,7 @@ public class AutoSolve {
     private void showSolving(ArrayList<ArrayList<Integer>> states) {
         final int[] index = { 0 };
 
-        Timer timer = new Timer(800, new ActionListener() {
+        timer = new Timer(800, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 if (index[0] >= states.size()) {
                     ((Timer) e.getSource()).stop();
@@ -147,6 +148,14 @@ public class AutoSolve {
 
         timer.setInitialDelay(800);
         timer.start();
+    }
+
+    public void stopSolving() {
+        if (timer != null) {
+            timer.stop();
+            timer = null;
+        }
+        frame.dispose();
     }
 
     public void playSound(String soundFileName) {
